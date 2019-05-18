@@ -13,5 +13,5 @@ var modal = '<link rel="stylesheet/less" type="text/css" href="https://semantic-
           + '<script src="https://semantic-ui.com/javascript/modal.js"></script>'
           + '<link rel="stylesheet" type="text/css" class="ui" href="https://semantic-ui.com/dist/semantic.min.css">'
           + '<script src="https://semantic-ui.com/javascript/embed.js"></script>'
-          + 'https://raw.githack.com/Watashis/shiki/master/btn_shiki.js;'
+          + '<script src="https://raw.githack.com/Watashis/shiki/master/btn_shiki.js"></script>'
 $('head').append(modal);
