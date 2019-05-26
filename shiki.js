@@ -14,97 +14,62 @@
 
 var $ = jQuery.noConflict(true);
 
-function dubset(data, id) {
-    console.log(id);
-    console.log(data);
-    $('#dubs').empty()
-    var i = 0;
-    while (i < data['dub'].length) {
-        var dubs = '';
-        if (id == data['dub'][i]['id']) {
-            var url = data['dub'][i]['url'].replace("http://", "https://");
-            console.log(url)
-            dubs = '<div class="item">'
-                + ' <div class="content">'
-                + '<b class="header">' + data['dub'][i]['author'] + '</b>';
-        } else {
-            dubs = '<div class="item" id="id_' + data['dub'][i]['id'] + '">'
-                + ' <div class="content">'
-                + '<a class="header">' + data['dub'][i]['author'] + '</a>';
-        }
-
-        var url2 =((data['dub'][i]['url'].replace("http://", "https://")).replace("https://", "")).split('/')[0]
-        dubs += '<div class="description">' + url2 + '</div>'
-            + '</div>'
-            + '</div>';
-        $('#dubs').append(dubs);
-        $('#id_' + data['dub'][i]['id']).click(function (i) {
-            dubset(data,data['dub'][i]['id']);
-        }.bind(null, i));
-        i++;
-    }
-    $('.ui.embed').attr('data-url', url);
-    $('.ui.embed').embed();
-    return 1;
+function getHostname(url) {
+    var link = document.createElement('a');
+    link.href = url;
+    return link.hostname;
 }
 
-function md(data, ep) {
-    console.log(data)
-    console.log(data['dub'].length);
-    var i = 0;
-    var url = data['dub'][0]['url'].replace("http://", "https://");
-    while (i < data['dub'].length) {
-        var dubs = '';
-        if (i === 0) {
-            dubs = '<div class="item">'
+function renderDubList(data, id) {
+    $('#dubs').empty();
+    var url = '';
+    data.dub.forEach(function renderDub(dub) {
+        var html = '';
+        if (dub.id === id) {
+            url = dub.url;
+            html = '<div class="item">'
                 + ' <div class="content">'
-                + '<b class="header">' + data['dub'][i]['author'] + '</b>';
+                + '<b class="header">' + dub.author + '</b>';
         } else {
-            dubs = '<div class="item" id="id_' + data['dub'][i]['id'] + '">'
+            html = '<div class="item" id="id_' + dub.id + '">'
                 + ' <div class="content">'
-                + '<a class="header">' + data['dub'][i]['author'] + '</a>';
+                + '<a class="header">' + dub.author + '</a>';
         }
 
-        var url2 =((data['dub'][i]['url'].replace("http://", "https://")).replace("https://", "")).split('/')[0]
-        dubs += '<div class="description">' + url2 + '</div>'
+        html += '<div class="description">' + getHostname(dub.url) + '</div>'
             + '</div>'
             + '</div>';
-        $('#dubs').append(dubs);
-        $('#id_' + data['dub'][i]['id']).click(function (id) {
-            dubset(data, id);
-        }.bind(null, data['dub'][i]['id']));
-        i++;
-    }
-    //console.log(dubs);
-    //$('.ui.modal>.content').html(html);
-    //$('#eps').append(eps);
-    $('.ui.embed').attr('data-url', url);
+
+        $('#dubs').append(html);
+
+        $('#id_' + dub.id).click(renderDubList.bind(null, data, dub.id));
+    });
+
+    $('.ui.embed').attr('data-url', url.split('http://').join('https://'));
     $('.ui.embed').embed();
-    return 1;
 }
 
+function renderDubListByIndex(data, index) {
+    return renderDubList(data, data.dub[index].id);
+}
 
-function watch_anime(shiki_id, ep, dub) {
+function getEpisodeData(shiki_id, ep, dub) {
     return $.get('https://a.pidorass.com/' + shiki_id + '/' + ep + '/' + dub);
 }
 
-
-var cls = function () {
-    console.log('work')
+function showModal() {
     var shiki_id = ((window.location.pathname).split("-")[0]).replace('/animes/', '');
     var ep = parseInt($('.current-episodes').text(), 10) || 0;
     var eps = $('.watch-online-placeholer').attr('data-episodes_aired');
     if (eps > ep) {
         ep++;
     }
-    console.log(shiki_id)
-    watch_anime(shiki_id, ep, 'no').then(data => {
-        md(data, ep);
+
+    getEpisodeData(shiki_id, ep, 'no').then(data => {
+        renderDubListByIndex(data, ep);
         $('.ui.modal').modal('show');
     });
-};
-
-
+}
 
 function start() {
     var modals = '<link rel="stylesheet/less" type="text/css" href="https://semantic-ui.com/src/definitions/modules/modal.less" />'
@@ -137,7 +102,7 @@ function start() {
             link.addClass("b-link_button dark").text('Смотреть онлайн')
         ).append(
         ).append($('<div/>').addClass('clearfix'))
-    ).click(cls);
+    ).click(showModal);
 
 }
 
