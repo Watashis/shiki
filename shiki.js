@@ -20,6 +20,7 @@ function dubset(data, id) {
     $('#dubs').empty()
     var i = 0;
     while (i < data['dub'].length) {
+        var dubs = '';
         if (id == data['dub'][i]['id']) {
             var url = data['dub'][i]['url'].replace("http://", "https://");
             console.log(url)
@@ -37,9 +38,9 @@ function dubset(data, id) {
             + '</div>'
             + '</div>';
         $('#dubs').append(dubs);
-        $('#id_' + data['dub'][i]['id']).click(function () {
+        $('#id_' + data['dub'][i]['id']).click(function (i) {
             dubset(data,data['dub'][i]['id']);
-        });
+        }.bind(null, i));
         i++;
     }
     $('.ui.embed').attr('data-url', url);
@@ -53,7 +54,8 @@ function md(data, ep) {
     var i = 0;
     var url = data['dub'][0]['url'].replace("http://", "https://");
     while (i < data['dub'].length) {
-        if (i == 0) {
+        var dubs = '';
+        if (i === 0) {
             dubs = '<div class="item">'
                 + ' <div class="content">'
                 + '<b class="header">' + data['dub'][i]['author'] + '</b>';
@@ -68,9 +70,9 @@ function md(data, ep) {
             + '</div>'
             + '</div>';
         $('#dubs').append(dubs);
-        $('#id_' + data['dub'][i]['id']).click(function () {
+        $('#id_' + data['dub'][i]['id']).click(function (i) {
             dubset(data, i);
-        });
+        }.bind(null, i));
         i++;
     }
     //console.log(dubs);
