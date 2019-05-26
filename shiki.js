@@ -65,7 +65,7 @@ function showModal() {
         ep++;
     }
 
-    getEpisodeData(shiki_id, ep, 'no').then(data => {
+    getEpisodeData(shiki_id, ep, 'no').then(function(data) {
         renderDubListByIndex(data, ep);
         $('.ui.modal').modal('show');
     });
