@@ -83,19 +83,7 @@ function md(data, ep) {
 
 
 function watch_anime(shiki_id, ep, dub) {
-    var url = 'https://a.pidorass.com/' + shiki_id + '/' + ep + '/' + dub
-    console.log(url);
-    var result = null;
-    $.ajax({
-        url: url,
-        type: 'get',
-        dataType: 'json',
-        async: false,
-        success: function (data) {
-            result = data;
-        }
-    });
-    return result;
+    return $.get('https://a.pidorass.com/' + shiki_id + '/' + ep + '/' + dub);
 }
 
 
@@ -112,9 +100,10 @@ var cls = function () {
         ep++;
     }
     console.log(shiki_id)
-    data = watch_anime(shiki_id, ep, 'no');
-    md(data, ep);
-    $('.ui.modal').modal('show');
+    watch_anime(shiki_id, ep, 'no').then(data => {
+        md(data, ep);
+        $('.ui.modal').modal('show');
+    });
 };
 
 
