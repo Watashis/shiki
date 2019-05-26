@@ -70,9 +70,9 @@ function md(data, ep) {
             + '</div>'
             + '</div>';
         $('#dubs').append(dubs);
-        $('#id_' + data['dub'][i]['id']).click(function (i) {
-            dubset(data, i);
-        }.bind(null, i));
+        $('#id_' + data['dub'][i]['id']).click(function (id) {
+            dubset(data, id);
+        }.bind(null, data['dub'][i]['id']));
         i++;
     }
     //console.log(dubs);
@@ -92,11 +92,7 @@ function watch_anime(shiki_id, ep, dub) {
 var cls = function () {
     console.log('work')
     var shiki_id = ((window.location.pathname).split("-")[0]).replace('/animes/', '');
-    try {
-        var ep = Number.parseInt($('.current-episodes')[0].innerText)
-    } catch (e) {
-        var ep = 0;
-    }
+    var ep = parseInt($('.current-episodes').text(), 10) || 0;
     var eps = $('.watch-online-placeholer').attr('data-episodes_aired');
     if (eps > ep) {
         ep++;
