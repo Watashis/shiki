@@ -54,7 +54,7 @@ function renderDubListByIndex(data, index) {
 }
 
 function getEpisodeData(shiki_id, ep, dub) {
-    return $.get('https://a.pidorass.com/' + shiki_id + '/' + ep + '/' + dub);
+    return $.get('https://i.cyka.rip/' + shiki_id + '/' + ep + '/' + dub);
 }
 
 function showModal() {
